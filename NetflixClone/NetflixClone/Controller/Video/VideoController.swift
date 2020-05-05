@@ -105,12 +105,13 @@ class VideoController: UIViewController {
     }
     
     private func getVideoLayerFrame() -> CGRect {
-           let x = view.bounds.minX + view.safeAreaInsets.left
-           let y = view.bounds.minY + view.safeAreaInsets.top
-           let width = view.bounds.width - (view.safeAreaInsets.left + view.safeAreaInsets.right)
-           let heigth = view.bounds.height - (view.safeAreaInsets.top + view.safeAreaInsets.bottom)
-           let result = CGRect(x: x, y: y, width: width, height: heigth)
-           return result
+        playerLayer?.videoGravity = .resizeAspectFill
+        let x = view.bounds.minX + view.safeAreaInsets.left
+        let y = view.bounds.minY //+ view.safeAreaInsets.top
+        let width = view.bounds.width - (view.safeAreaInsets.left + view.safeAreaInsets.right)
+        let heigth = view.bounds.height //- (view.safeAreaInsets.top + view.safeAreaInsets.bottom)
+        let result = CGRect(x: x, y: y, width: width, height: heigth)
+        return result
        }
     
     // 마지막 시청 구간 서버에 저장
@@ -406,7 +407,8 @@ extension VideoController {
             guard let self = self else { return }
             
             let currentTime = time.value / Int64(NSEC_PER_SEC)
-            self.videoModel.currentTime = currentTime
+            guard currentTime > 0 else { return }
+            self.videoModel.currentTime = currentTime == self.videoModel.range ? 0: currentTime
             let restTime = self.videoModel.getRestTime(currentTime: currentTime)
             self.videoView.updateTimeSet(currentTime: currentTime, restTime: restTime)
         })

@@ -272,7 +272,7 @@ class PreViewController: BaseViewController {
             let view = PreviewView(url: url, index: index)
             view.delegate = self
             view.configure(image: preview.poster)
-//            NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: view.player.currentItem)
+
             previews.append(view)
         }
         
@@ -281,6 +281,7 @@ class PreViewController: BaseViewController {
         for (index, view) in previewSubviews.enumerated() {
             playerScrollView.addSubview(view)
             let leading = index == 0 ? playerScrollView.snp.leading : previewSubviews[index - 1].snp.trailing
+            
             view.snp.makeConstraints {
                 $0.leading.equalTo(leading)
                 $0.top.bottom.width.height.equalTo(playerScrollView)
@@ -291,7 +292,6 @@ class PreViewController: BaseViewController {
                     $0.trailing.equalTo(playerScrollView.snp.trailing)
                 }
             }
-            
         }
     }
     

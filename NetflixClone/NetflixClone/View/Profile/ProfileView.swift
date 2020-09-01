@@ -9,17 +9,19 @@
 import UIKit
 
 protocol ProfilViewDelegate: class {
-    func profileButtonDidTap()
-    func profileChangeButtonDidTap(blurView: UIView, pencilButton: UIButton)
+    func profileButtonDidTap(tag: Int)
+    func profileChangeButtonDidTap(tag: Int, blurView: UIView, pencilButton: UIButton)
 }
 
 class ProfileView: UIView {
     
-    private let profileButton = UIButton()
+    
+    let profileButton = UIButton()
     let profileLabel = UILabel()
+
     private let pencilButton = UIButton()
     private let blurView = UIView()
-    
+    private let baseView = UIView()
     weak var delegate: ProfilViewDelegate?
     
     
@@ -28,6 +30,7 @@ class ProfileView: UIView {
         setUI()
         setConstraint()
         setHidden(state: true)
+
     }
     
     required init?(coder: NSCoder) {
@@ -35,24 +38,27 @@ class ProfileView: UIView {
     }
     
     private func setUI() {
-        let cornerRadius: CGFloat = 8
-        backgroundColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        let cornerRadius: CGFloat = 4
+        backgroundColor = .setNetfilxColor(name: .black)
         layer.cornerRadius = cornerRadius
         clipsToBounds = true
         
+        baseView.backgroundColor = .setNetfilxColor(name: .black)
+        addSubview(baseView)
+        
         [profileButton,profileLabel,blurView,pencilButton].forEach {
-            self.addSubview($0)
+            baseView.addSubview($0)
         }
         
-        profileButton.setImage(UIImage(named: "프로필2"), for: .normal)
+        profileButton.setImage(UIImage(named: ""), for: .normal)
         profileButton.contentMode = .scaleAspectFill
         profileButton.imageView?.layer.masksToBounds = true
         profileButton.imageView?.layer.cornerRadius = cornerRadius
         profileButton.addTarget(self, action: #selector(profileButtonDidTap), for: .touchUpInside)
         
-        profileLabel.text = "양중창"
+        profileLabel.text = ""
         profileLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        profileLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        profileLabel.font = UIFont.dynamicFont(fontSize: 17, weight: .bold)
         
         blurView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
@@ -62,7 +68,7 @@ class ProfileView: UIView {
         
     }
     
-    private func setHidden(state: Bool) {
+    func setHidden(state: Bool) {
         blurView.isHidden = state
         pencilButton.isHidden = state
     }
@@ -72,17 +78,21 @@ class ProfileView: UIView {
         let margin: CGFloat = 15
         let padding: CGFloat = 10
         
-        [profileButton,profileLabel,blurView,pencilButton].forEach {
+        [baseView,profileButton,profileLabel,blurView,pencilButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             
-            profileButton.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-            profileButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: margin).isActive = true
-            profileButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -margin).isActive = true
-            profileButton.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.8).isActive = true
+            baseView.topAnchor.constraint(equalTo:self.topAnchor).isActive = true
+            baseView.leadingAnchor.constraint(equalTo:self.leadingAnchor).isActive = true
+            baseView.trailingAnchor.constraint(equalTo:self.trailingAnchor).isActive = true
+            baseView.bottomAnchor.constraint(equalTo:self.bottomAnchor).isActive = true
+
+            profileButton.topAnchor.constraint(equalTo: baseView.topAnchor).isActive = true
+            profileButton.centerXAnchor.constraint(equalTo: baseView.centerXAnchor).isActive = true
+            profileButton.heightAnchor.constraint(equalTo: baseView.heightAnchor, multiplier: 0.8).isActive = true
             profileButton.widthAnchor.constraint(equalTo: profileButton.heightAnchor).isActive = true
-            
+
             profileLabel.topAnchor.constraint(equalTo: profileButton.bottomAnchor, constant: padding / 2).isActive = true
-            profileLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+            profileLabel.centerXAnchor.constraint(equalTo: baseView.centerXAnchor).isActive = true
             
             blurView.topAnchor.constraint(equalTo: profileButton.topAnchor).isActive = true
             blurView.leadingAnchor.constraint(equalTo: profileButton.leadingAnchor).isActive = true
@@ -97,10 +107,10 @@ class ProfileView: UIView {
         }
     }
     @objc private func profileButtonDidTap() {
-        delegate?.profileButtonDidTap()
+        delegate?.profileButtonDidTap(tag: self.tag)
     }
     @objc private func profileChangeButtonDidTap() {
-        delegate?.profileChangeButtonDidTap(blurView: blurView, pencilButton: pencilButton)
+        delegate?.profileChangeButtonDidTap(tag: self.tag, blurView: blurView, pencilButton: pencilButton)
     }
 }
 

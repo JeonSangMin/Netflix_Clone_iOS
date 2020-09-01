@@ -10,19 +10,17 @@ import UIKit
 
 protocol AddProfileViewDelegate: class {
     func newProfileButtonDidTap()
-    func kidsSwitchDidTap()
+    
 }
-
-
 class AddProfileView: UIView {
     
-    private let newProfileButton = UIButton()
+    let newProfileButton = UIButton()
     private let changeLabel = UILabel()
-    private let nickNameTextfield = UITextField()
-    private let kidsLabel = UILabel()
-    private let kidsSwitch = UISwitch()
+    let nickNameTextfield = UITextField()
+    
     
     weak var delegate: AddProfileViewDelegate?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -38,7 +36,7 @@ class AddProfileView: UIView {
         
         backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         
-        [newProfileButton,changeLabel,nickNameTextfield,kidsLabel,kidsSwitch].forEach {
+        [newProfileButton,changeLabel,nickNameTextfield].forEach {
             self.addSubview($0)
         }
         
@@ -50,60 +48,44 @@ class AddProfileView: UIView {
         
         changeLabel.text = "변경"
         changeLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        changeLabel.font = UIFont.systemFont(ofSize: 17)
+        changeLabel.font = UIFont.dynamicFont(fontSize: 15, weight: .regular)
         
         nickNameTextfield.addLeftPadding()
         nickNameTextfield.layer.borderWidth = 1
+//        nickNameTextfield.attributedPlaceholder = NSAttributedString(string: "dddd", attributes: [NSAttributedString.Key.foregroundColor : UIColor.setNetfilxColor(name: .white)])
         nickNameTextfield.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         nickNameTextfield.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         nickNameTextfield.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         
-        kidsLabel.text = "키즈용"
-        kidsLabel.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        kidsLabel.font = UIFont.systemFont(ofSize: 17)
-        
-        kidsSwitch.onTintColor = #colorLiteral(red: 0.04303120111, green: 0.4391969315, blue: 0.9407585816, alpha: 1)
-        kidsSwitch.tintColor = #colorLiteral(red: 0.1489986479, green: 0.1490316391, blue: 0.1489965916, alpha: 1)
-        
-        kidsSwitch.addTarget(self, action: #selector(kidsSwitchDidTap), for: .touchUpInside)
-        
     }
+    
     private func setConstraints() {
-        
-        let margin: CGFloat = 10
+        let margin: CGFloat = 15
         let padding: CGFloat = 40
         
-        [newProfileButton,changeLabel,nickNameTextfield,kidsLabel,kidsSwitch].forEach {
+        [newProfileButton,changeLabel,nickNameTextfield].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
-        newProfileButton.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -padding ).isActive = true
+        }        
+        newProfileButton.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         newProfileButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        newProfileButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3).isActive = true
+        newProfileButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.255).isActive = true
         newProfileButton.heightAnchor.constraint(equalTo: newProfileButton.widthAnchor).isActive = true
         
-        changeLabel.topAnchor.constraint(equalTo: newProfileButton.bottomAnchor).isActive = true
+        changeLabel.topAnchor.constraint(equalTo: newProfileButton.bottomAnchor, constant: margin).isActive = true
+        changeLabel.heightAnchor.constraint(equalToConstant: margin).isActive = true
         changeLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        
-        nickNameTextfield.topAnchor.constraint(equalTo: changeLabel.bottomAnchor, constant: margin * 2 ).isActive = true
+    
+//        nickNameTextfield.topAnchor.constraint(equalTo: changeLabel.bottomAnchor, constant: spacing * 2 ).isActive = true
         nickNameTextfield.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding * 2).isActive = true
         nickNameTextfield.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding * 2).isActive = true
+        nickNameTextfield.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -margin).isActive = true
         nickNameTextfield.heightAnchor.constraint(equalToConstant: padding * 1.1).isActive = true
         
-        kidsSwitch.topAnchor.constraint(equalTo: nickNameTextfield.bottomAnchor, constant: margin * 2 ).isActive = true
-        kidsSwitch.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: margin / 2).isActive = true
-        
-        kidsLabel.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -(margin / 2)).isActive = true
-        kidsLabel.centerYAnchor.constraint(equalTo: kidsSwitch.centerYAnchor).isActive = true
-        
-        
     }
+    
     @objc private func newProfileButtonDidTap() {
         delegate?.newProfileButtonDidTap()
         
-    }
-    @objc private func kidsSwitchDidTap() {
-        delegate?.kidsSwitchDidTap()
     }
     
 }
@@ -120,6 +102,8 @@ extension UITextField {
         self.leftViewMode = .always
     }
 }
+
+
 
 
 
